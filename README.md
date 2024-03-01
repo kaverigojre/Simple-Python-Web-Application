@@ -94,3 +94,24 @@ Save the changes.
 Update Your Jenkinsfile:
 
 Add post-build actions to send email notifications when the build succeeds or fails.
+
+
+
+
+
+To implement a CI/CD workflow using GitHub Actions for a Python application, follow these steps:
+
+1. Setup:
+Use the provided Python application repository on GitHub: Sample Python Application Repository.
+Ensure the repository has a main branch and a staging branch.
+2. GitHub Actions Workflow:
+Create a .github/workflows directory in your repository.
+Inside the directory, create a YAML file (e.g., ci_cd_workflow.yml) to define the workflow.
+3. Workflow Steps.
+4. Environment Secrets:
+Use GitHub Secrets to store sensitive information required for deployments, such as deployment keys and API tokens.
+5. Documentation:
+Update the README.md file with instructions on how the GitHub Actions workflow works and how to configure the necessary secrets.
+6. Submission:
+Provide the URL to the GitHub repository with the workflow file (ci_cd_workflow.yml) and the updated README.md.
+

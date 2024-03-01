@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    triggers {
+        // Trigger the build when changes are pushed to the main branch
+        scm 'main'
+    }
+
     stages {
         stage('Build') {
             steps {
@@ -28,15 +33,27 @@ pipeline {
                         def remoteDir = '/var/www/staging'
                         sh "scp -r ./* ${remoteUser}@${remoteHost}:${remoteDir}"
                     }
+                }
+            }
         }
     }
 
     post {
         success {
             echo 'Pipeline executed successfully!'
+            emailext (
+                subject: 'Jenkins Pipeline Success',
+                body: 'The Jenkins pipeline has executed successfully.',
+                recipientProviders: [culprits(), developers()],
+            )
         }
         failure {
             echo 'Pipeline failed!'
+            emailext (
+                subject: 'Jenkins Pipeline Failure',
+                body: 'The Jenkins pipeline has failed.',
+                recipientProviders: [culprits(), developers()],
+            )
         }
     }
 }

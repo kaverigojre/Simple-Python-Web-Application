@@ -1,0 +1,42 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                sh 'pip install -r requirements.txt'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'pytest'
+            }
+        }
+        stage('Deploy') {
+            when {
+                // Only deploy if previous stages (Build and Test) were successful
+                allOf {
+                    previousBuild().result == 'SUCCESS'
+                }
+            }
+            steps {
+                script {
+                    // Copy Flask application files to Ubuntu VM using SSH
+                    sshagent(credentials: ['i-015edf894e6547dfa']) {
+                        def remoteUser = 'kaveri'
+                        def remoteHost = '3.219.240.137'
+                        def remoteDir = '/var/www/staging'
+                        sh "scp -r ./* ${remoteUser}@${remoteHost}:${remoteDir}"
+                    }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline executed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}
